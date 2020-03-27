@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="60">
+    <!-- 设置日志的存储路径，方便后面引用 -->
+    <property name="log.dir" value="D:\\workspace_spring\\log" />
+    <property name="max.history" value="30" />
+    <!-- 活动文件的最大大小 -->
+    <property name="max.file.size" value="100MB" />
+    <!-- 所有归档日志文件的总大小/容量 -->
+    <property name="total.size.cap" value="10G" />
+
+    <!-- 控制台日志的Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] - %logger{50} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志 输出日志文件-->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 根据文件名称的模式，设置按天回滚 -->
+            <fileNamePattern>${log.dir}/com.worldStar-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 最大历史天数，即保存多少天的日志文件 -->
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <!-- 对记录事件进行格式化 -->
+        <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%-5level] - %d{HH:mm:ss.SSS} [%thread] %logger{50} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 访问日志的Appender -->
+    <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/com.worldStar-access-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%-5level] - %d{HH:mm:ss.SSS} [%thread] %logger{36} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 监控日志的Appender -->
+    <appender name="MONITOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/com.worldStar-monitor-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%-5level] - %d{HH:mm:ss.SSS} [%thread] %logger{36} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 缓存日志的Appender -->
+    <appender name="CACHE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 -->
+            <fileNamePattern>${log.dir}/com.worldStar-cache-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%-5level] - %d{HH:mm:ss.SSS} [%thread] [%logger{36}] -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 操作日志的Appender -->
+    <appender name="OPERATOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/com.worldStar-operator-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>${max.history}</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%-5level] - %d{HH:mm:ss.SSS} [%thread] [%logger{36} -- %msg%n]</pattern>
+        </encoder>
+    </appender>
+
+    <!-- springframework的日志 -->
+    <logger name="org.springframework" level="ERROR" />
+    <!-- apache的日志 -->
+    <logger name="org.apache" level="ERROR" />
+    <!-- 这里addivitity要为false，否则STDOUT的日志也会达到ERROR里 -->
+    <!-- 监控日志 -->
+    <logger name="WORLDSTAR_MONITOR" additivity="false" level="INFO">
+        <appender-ref ref="MONITOR" />
+    </logger>
+    <!-- 错误日志 -->
+    <logger name="WORLDSTAR_ERROR" additivity="false" level="DEBUG">
+        <appender-ref ref="ERROR" />
+    </logger>
+    <!-- 访问日志 -->
+    <logger name="WORLDSTAR_ACCESS" addivitity="false" level="INFO">
+        <appender-ref ref="ACCESS" />
+    </logger>
+    <!-- 缓存日志 -->
+    <logger name="WORLDSTAR_CACHE" additivity="false" level="INFO">
+        <appender-ref ref="CACHE" />
+    </logger>
+    <!-- 操作日志 -->
+    <logger name="WORLDSTAR_OPERATOR" additivity="false" level="INFO">
+        <appender-ref ref="OPERATOR" />
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
